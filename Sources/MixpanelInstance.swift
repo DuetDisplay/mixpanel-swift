@@ -10,7 +10,7 @@ import Foundation
 #if !os(OSX)
 import UIKit
 #else
-import Cocoa
+//import Cocoa
 #endif // os(OSX)
 #if os(iOS)
 import SystemConfiguration
@@ -338,11 +338,11 @@ open class MixpanelInstance: CustomDebugStringConvertible, FlushDelegate, AEDele
         let notificationCenter = NotificationCenter.default
         notificationCenter.addObserver(self,
                                        selector: #selector(applicationWillResignActive(_:)),
-                                       name: NSApplication.willResignActiveNotification,
+                                       name: NSNotification.Name("NSApplicationWillResignActiveNotification"),
                                        object: nil)
         notificationCenter.addObserver(self,
                                        selector: #selector(applicationDidBecomeActive(_:)),
-                                       name: NSApplication.didBecomeActiveNotification,
+                                       name: NSNotification.Name("NSApplicationDidBecomeActiveNotification"),
                                        object: nil)
     }
 #endif // os(OSX)
