@@ -25,11 +25,10 @@ class AutomaticProperties {
         #if os(iOS) || os(tvOS)
             var screenSize: CGSize? = nil
             screenSize = UIScreen.main.bounds.size
-            /* When running in daemon mode, calling cocoa-related classes (like NSScreen), methods is forbidden. */
-//          if let screenSize = NSScreen.main?.frame.size {
-//              p["$screen_height"]     = Int(screenSize.height)
-//              p["$screen_width"]      = Int(screenSize.width)
-//          }
+            if let screenSize = screenSize {
+                p["$screen_height"]     = Int(screenSize.height)
+                p["$screen_width"]      = Int(screenSize.width)
+            }
             #if targetEnvironment(macCatalyst)
                 p["$os"]                = "macOS"
                 p["$os_version"]        = ProcessInfo.processInfo.operatingSystemVersionString
@@ -45,10 +44,11 @@ class AutomaticProperties {
                 }
             #endif
         #elseif os(macOS)
-            if let screenSize = NSScreen.main?.frame.size {
-                p["$screen_height"]     = Int(screenSize.height)
-                p["$screen_width"]      = Int(screenSize.width)
-            }
+        /* When running in daemon mode, calling cocoa-related classes (like NSScreen), methods is forbidden. */
+//          if let screenSize = NSScreen.main?.frame.size {
+//              p["$screen_height"]     = Int(screenSize.height)
+//              p["$screen_width"]      = Int(screenSize.width)
+//          }
             p["$os"]                = "macOS"
             p["$os_version"]        = ProcessInfo.processInfo.operatingSystemVersionString
         #elseif os(watchOS)
