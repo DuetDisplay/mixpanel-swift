@@ -8,11 +8,11 @@
 
 import Foundation
 
-#if os(iOS) || os(tvOS)
+#if os(iOS) || os(tvOS) || os(visionOS)
 import UIKit
 #elseif os(macOS)
 //import Cocoa
-#else
+#elseif canImport(WatchKit)
 import WatchKit
 #endif
 
@@ -59,6 +59,9 @@ class AutomaticProperties {
             let screenSize = watchDevice.screenBounds.size
             p["$screen_width"]      = Int(screenSize.width)
             p["$screen_height"]     = Int(screenSize.height)
+        #elseif os(visionOS)
+            p["$os"]                = "visionOS"
+            p["$os_version"]        = UIDevice.current.systemVersion
         #endif
 
         let infoDict = Bundle.main.infoDictionary ?? [:]
@@ -69,6 +72,7 @@ class AutomaticProperties {
         p["$lib_version"]       = AutomaticProperties.libVersion()
         p["$manufacturer"]      = "Apple"
         p["$model"]             = AutomaticProperties.deviceModel()
+        
         return p
     }()
 
@@ -80,7 +84,7 @@ class AutomaticProperties {
             p["$ios_app_release"] = infoDict["CFBundleShortVersionString"]
         }
         p["$ios_device_model"]  = AutomaticProperties.deviceModel()
-        #if !os(OSX) && !os(watchOS)
+        #if !os(OSX) && !os(watchOS) && !os(visionOS)
         p["$ios_version"]       = UIDevice.current.systemVersion
         #else
         p["$ios_version"]       = ProcessInfo.processInfo.operatingSystemVersionString
@@ -145,7 +149,7 @@ class AutomaticProperties {
     }
 
     class func libVersion() -> String {
-        return "4.1.4"
+        return "4.3.0"
     }
 
 }
